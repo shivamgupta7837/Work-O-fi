@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:workofi/screens/sign_in.dart';
+import 'package:workofi/screens/signIn.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
