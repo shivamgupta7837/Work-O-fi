@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "762589294679",
+    "project_id": "work-o-fi",
+    "storage_bucket": "work-o-fi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:762589294679:android:479a4d7fda57c1b3443312",
+        "android_client_info": {
+          "package_name": "com.example.workofi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "762589294679-mj3vpht49fr0c7oei4sn8jvcpfmkl8ak.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAPPnP_29TKj8_-Hz0Zk2BQbHbxm8O62E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "762589294679-mj3vpht49fr0c7oei4sn8jvcpfmkl8ak.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

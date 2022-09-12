@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:workofi/screens/signIn.dart';
+import 'package:workofi/screens/homePage.dart';
+
+import 'Login-Screen/signIn.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -14,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-        Duration(milliseconds: 2950),
+        const Duration(milliseconds: 2950),
         () => Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => SignIn())));
   }
@@ -26,12 +28,12 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.asset("assets/splash.json"),
-            SizedBox(height: 80,),
+            const  SizedBox(height: 80),
             Text(
               "Work-o-Fi",
-              style: GoogleFonts.raleway(fontSize: 32,fontWeight:FontWeight.bold,color: Colors.black)
+              style: GoogleFonts.raleway(fontSize: 32,fontWeight:FontWeight.bold,color: Colors.purple)
             ),
-            Text('Organize your  Smartly',
+            const Text('Organize your work Smartly',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,fontStyle: FontStyle.italic,color: Colors.black54)),
           ]),
     );

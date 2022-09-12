@@ -5,8 +5,17 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-
+    return   SafeArea(
+      top: true,
+      child: Scaffold(
+          body: Column(
+            children: [
+              Center(
+                child: Text("this is home page",style:TextStyle(fontSize: 20),),
+              )
+            ],
+          )
+      ),
     );
   }
 }
