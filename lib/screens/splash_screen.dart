@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:workofi/screens/homePage.dart';
 
-import 'Login-Screen/signIn.dart';
+// import '../Login-Services/signIn.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -16,25 +16,28 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-        const Duration(milliseconds: 2950),
+        const Duration(seconds: 3),
         () => Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SignIn())));
+            context, MaterialPageRoute(builder: (context) => HomePage())));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.purple,
       body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Lottie.asset("assets/splash.json"),
             const  SizedBox(height: 80),
-            Text(
-              "Work-o-Fi",
-              style: GoogleFonts.raleway(fontSize: 32,fontWeight:FontWeight.bold,color: Colors.purple)
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                "Work-o-Fi",
+                style: GoogleFonts.raleway(fontSize: 32,fontWeight:FontWeight.bold,color: Colors.white)
+              ),
             ),
-            const Text('Organize your work Smartly',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,fontStyle: FontStyle.italic,color: Colors.black54)),
+             Text('Organize your work Smartly',
+                style: GoogleFonts.raleway(fontSize: 20, fontWeight: FontWeight.bold,fontStyle: FontStyle.italic,color: Colors.white54)),
           ]),
     );
   }

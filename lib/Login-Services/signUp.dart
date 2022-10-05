@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:workofi/custom-widget/custom_signup_form.dart';
-import 'package:workofi/screens/Login-Screen/signIn.dart';
+import 'package:workofi/Login-Services/signIn.dart';
 
 class SignUp extends StatelessWidget {
   @override

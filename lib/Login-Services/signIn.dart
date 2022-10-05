@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:workofi/Login-Services/signUp.dart';
 import 'package:workofi/custom-widget/login-widgets.dart';
-import 'package:workofi/screens/Login-Screen/signUp.dart';
 import 'package:workofi/screens/homePage.dart';
 
 class SignIn extends StatefulWidget {
