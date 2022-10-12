@@ -37,12 +37,14 @@ dependencies:
   lottie: ^1.4.2
   google_fonts: ^3.0.1
   # this is 3rd party library to start the authentication flow.
-  google_sign_in: ^5.4.1
-  firebase_auth: ^3.7.0
+  # google_sign_in: ^5.4.1
+  # firebase_auth: ^3.7.0
   # It validate email wheater it is correct or not
   email_validator: ^2.1.17
   shared_preferences:
   get: ^2.0.15
+  fluttericon: 2.0.0
+  day_picker: 2.1.1
 
 dev_dependencies:
   flutter_test:

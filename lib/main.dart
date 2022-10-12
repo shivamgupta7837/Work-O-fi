@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:workofi/Screens/splash_screen.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart';
 
-Future main() async{
-  WidgetsFlutterBinding.ensureInitialized();
+ main() async{
+  // WidgetsFlutterBinding.ensureInitialized();
   //we are initialize firebase by using this  method and it will initialize new instance and return it to app 
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
       ),
       home:  SplashScreen()
     );
