@@ -1,6 +1,9 @@
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workofi/screens/completeTask.dart';
+import 'package:workofi/widgets/addTaskButton.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -8,171 +11,134 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+ final taskList = [];
+  bool isLightTheme = true;
   int _selectedIndex = 0;
+  DateTime time = DateTime.now();
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
-  final taskList = [];
+  
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(backgroundColor: Colors.white),
       appBar: AppBar(
         elevation: 10,
         backgroundColor: const Color(0xff8963ff),
-        centerTitle: true,
         title: Text(
           "Your Tasks",
           style: GoogleFonts.openSans(
               color: Colors.white, fontSize: 25, fontWeight: FontWeight.w600),
         ),
         actions: [
-          const IconButton(
-              onPressed: null, icon: Icon(Icons.settings, color: Colors.white)),
+          Switch(value: isLightTheme, onChanged: (bool value)=>setState(() {
+            isLightTheme=value;
+          }),
+          activeColor:Color(0xff8963ff) ,
+          activeTrackColor: Colors.purple,
+          ),
           SizedBox(width: MediaQuery.of(context).size.width * 0.02)
         ],
       ),
-      floatingActionButton: _addTasksButton(context),
-      bottomNavigationBar: _bottomNavigationBar(),
+      floatingActionButton: _selectedIndex==0 ? AddTaskButton(
+        taskList: taskList,
+      ):null,
+       bottomNavigationBar: _bottomNavigationBar(),
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+      body: _selectedIndex==0 ? SingleChildScrollView(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.833,
             child: ListView.builder(
                 itemCount: taskList.length,
                 itemBuilder: ((context, index) {
+                  int newIndex = index + 1;
                   return Padding(
                     padding:
-                        const EdgeInsets.only(left: 10.0, top: 8, right: 10),
-                    child: ListTile(
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      tileColor: const Color.fromARGB(255, 172, 160, 207),
-                      title: Text(
-                        taskList[index],
-                        style: const TextStyle(fontSize: 20),
+                        const EdgeInsets.only(left: 15.0, top: 8, right: 15),
+                    child: Slidable(
+                      endActionPane: ActionPane(
+                        motion: const StretchMotion(),
+                        children: [
+                          SlidableAction(
+                            onPressed: (context) {
+                              delete(index);
+                            },
+                            icon: Icons.delete,
+                            backgroundColor: Colors.purple,
+                            borderRadius: const BorderRadius.only(
+                                bottomRight: Radius.circular(10),
+                                topRight: Radius.circular(10)),
+                          )
+                        ],
+                      ),
+                      startActionPane: ActionPane(
+                        motion: const StretchMotion(),
+                        children: [
+                          SlidableAction(
+                            onPressed: (context) {
+                              // taskComplete(index);
+                            },
+                            icon: Icons.task_alt_outlined,
+                            backgroundColor: Colors.purple,
+                            borderRadius: const BorderRadius.only(
+                                bottomRight: Radius.circular(10),
+                                topRight: Radius.circular(10)),
+                          )
+                        ],
+                      ),
+                      child: ListTile(
+                        trailing: Text("${time.hour}.${time.minute}"),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                topLeft: Radius.circular(10))),
+                        tileColor: const Color.fromARGB(255, 172, 160, 207),
+                        title: Text(
+                          taskList[index],
+                          style: const TextStyle(
+                              fontSize: 20,
+                              decoration:TextDecoration.none),
+                        ),
+                        leading: CircleAvatar(
+                          radius: 15,
+                          child: Text("$newIndex"),
+                        ),
                       ),
                     ),
                   );
                 })),
           )
         ]),
-      ),
+      ): CompleteTasks()
     );
   }
 
-  BottomNavigationBar _bottomNavigationBar() {
-    return BottomNavigationBar(
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.task_alt_outlined),
-          label: 'Tasks',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.search_rounded),
-          label: 'Search Task',
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      selectedItemColor: const Color(0xff8963ff),
-      unselectedItemColor: Colors.grey,
-      onTap: _onItemTapped,
-    );
-  }
-
-  FloatingActionButton _addTasksButton(BuildContext context) {
-    return FloatingActionButton(
-      backgroundColor: const Color(0xFF8963ff),
-      splashColor: Colors.deepPurpleAccent[100],
-      clipBehavior: Clip.hardEdge,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10))),
-      onPressed: () => _displayTask(context),
-      child: const Icon(
-        Icons.add,
-        size: 30,
-      ),
-    );
-  }
-
-  _displayTask(BuildContext context) {
-    final globalFormKey = GlobalKey<FormState>();
-    final taskController = TextEditingController();
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              "Add Task",
-              style: GoogleFonts.openSans(
-                  color: Colors.black, fontWeight: FontWeight.w600),
-              textAlign: TextAlign.center,
-            ),
-            actions: [
-              Container(
-                padding: const EdgeInsets.only(left: 20, right: 30),
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: Column(
-                  children: [
-                    Form(
-                      key: globalFormKey,
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Enter Some Task";
-                          } else {
-                            return null;
-                          }
-                        },
-                        controller: taskController,
-                        decoration:
-                            const InputDecoration(hintText: "Enter Your Task"),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          child: const Text(
-                            style: TextStyle(fontSize: 16),
-                            'ADD',
-                          ),
-                          onPressed: () {
-                            if (globalFormKey.currentState!.validate()) {
-                              addTask(taskController.text);
-                              Navigator.of(context).pop();
-                            }
-                          },
-                        ),
-                        TextButton(
-                          child: const Text(
-                              style: TextStyle(fontSize: 16), 'CANCEL'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          );
-        });
-  }
-
-  void addTask(String task) {
+  void delete(int index) {
     setState(() {
-      taskList.add(task);
+      taskList.removeAt(index);
     });
   }
+  
+   BottomNavigationBar _bottomNavigationBar() {
+    return BottomNavigationBar(
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.pending_actions_rounded), label: 'Pending Tasks'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.task_alt_rounded), label: 'Completed tasks')
+      ],
+      currentIndex: _selectedIndex,
+      selectedFontSize: 17,
+      unselectedFontSize: 15,
+      iconSize: 25,
+      onTap: (value) {
+        setState(() {
+          _selectedIndex = value;
+        });
+      },
+    );
+  }
+
 }
