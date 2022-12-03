@@ -1,11 +1,12 @@
-class Todo{
-  static final Todo _singletonObj = Todo._internal();
+class ToDo {
+  int id;
+  String? task;
+  bool isComplete;
 
-  factory Todo(){
-    return _singletonObj;
+  ToDo({required this.id, this.task, this.isComplete = false});
+
+  static List<ToDo> todoFromList() {
+    return [
+    ];
   }
-
-  Todo._internal();
-
-  List<String> tasks = [];
 }
