@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:workofi/Model/Todo.dart';
 
 class PendingTasks extends StatefulWidget {
@@ -18,8 +17,7 @@ class _PendingTasksState extends State<PendingTasks> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF8963ff),
-        splashColor: Colors.deepPurpleAccent[100],
+        backgroundColor: Colors.purple,
         clipBehavior: Clip.hardEdge,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -32,17 +30,14 @@ class _PendingTasksState extends State<PendingTasks> {
       body: SingleChildScrollView(
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height * 0.833,
+            height: MediaQuery.of(context).size.height * 0.833,
             child: ListView.builder(
                 itemCount: todo.length,
                 itemBuilder: ((context, index) {
                   int newIndex = index + 1;
                   return Padding(
                     padding:
-                    const EdgeInsets.only(left: 15.0, top: 8, right: 15),
+                        const EdgeInsets.only(left: 15.0, top: 8, right: 15),
                     child: Slidable(
                       endActionPane: ActionPane(
                         motion: const StretchMotion(),
@@ -124,10 +119,7 @@ class _PendingTasksState extends State<PendingTasks> {
             actions: [
               Container(
                 padding: const EdgeInsets.only(left: 20, right: 30),
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.8,
+                width: MediaQuery.of(context).size.width * 0.8,
                 child: Column(
                   children: [
                     Form(
@@ -143,7 +135,7 @@ class _PendingTasksState extends State<PendingTasks> {
                         },
                         controller: taskController,
                         decoration:
-                        const InputDecoration(hintText: "Enter Your Task"),
+                            const InputDecoration(hintText: "Enter Your Task"),
                       ),
                     ),
                     const SizedBox(

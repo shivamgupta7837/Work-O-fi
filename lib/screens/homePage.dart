@@ -15,23 +15,12 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: const Color(0xff8963ff),
           title: Text(
             "Your Tasks",
             style: GoogleFonts.openSans(
                 color: Colors.white, fontSize: 25, fontWeight: FontWeight.w600),
           ),
-          actions: [
-            Switch(
-              value: isLightTheme,
-              onChanged: (bool value) => setState(() {
-                isLightTheme = value;
-              }),
-              activeColor: const Color(0xff8963ff),
-              activeTrackColor: Colors.purple,
-            ),
-            SizedBox(width: MediaQuery.of(context).size.width * 0.02)
-          ],
+
         ),
         backgroundColor: Colors.white,
         body: PendingTasks(),

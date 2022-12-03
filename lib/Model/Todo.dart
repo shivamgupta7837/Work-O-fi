@@ -7,6 +7,8 @@ class ToDo {
 
   static List<ToDo> todoFromList() {
     return [
+      ToDo(id: 0, task: "Slide left for mark task completed"),
+      ToDo(id: 1, task: "Slide right for delete the task")
     ];
   }
 }
