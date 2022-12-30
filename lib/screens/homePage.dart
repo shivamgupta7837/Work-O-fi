@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:workofi/screens/pendingTasks.dart';
 
 
@@ -13,16 +12,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          title: Text(
-            "Your Tasks",
-            style: GoogleFonts.openSans(
-                color: Colors.white, fontSize: 25, fontWeight: FontWeight.w600),
-          ),
-
-        ),
-        backgroundColor: Colors.white,
         body: PendingTasks(),
     );
   }

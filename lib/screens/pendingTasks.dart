@@ -1,9 +1,11 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:workofi/Model/Todo.dart';
+import 'package:workofi/model/Todo.dart';
+import 'package:workofi/util/hiveboxes.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 
 class PendingTasks extends StatefulWidget {
   @override
@@ -11,17 +13,40 @@ class PendingTasks extends StatefulWidget {
 }
 
 class _PendingTasksState extends State<PendingTasks> {
-  final todo = ToDo.todoFromList();
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    Hive.close();
+  }
+  late String tasks;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        title: Text(
+          "Your Tasks",
+          style: GoogleFonts.openSans(
+              color: Colors.white, fontSize: 25, fontWeight: FontWeight.w600),
+        ),
+
+      ),
+      backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.purple,
         clipBehavior: Clip.hardEdge,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
-        onPressed: () => _displayTask(context),
+        onPressed: () async {
+          _displayTask(context);
+        },
         child: const Icon(
           Icons.add,
           size: 30,
@@ -31,79 +56,85 @@ class _PendingTasksState extends State<PendingTasks> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.833,
-            child: ListView.builder(
-                itemCount: todo.length,
-                itemBuilder: ((context, index) {
-                  int newIndex = index + 1;
-                  return Padding(
-                    padding:
-                        const EdgeInsets.only(left: 15.0, top: 8, right: 15),
-                    child: Slidable(
-                      endActionPane: ActionPane(
-                        motion: const StretchMotion(),
-                        children: [
-                          SlidableAction(
-                            onPressed: (context) {
-                              delete(todo[index].id);
-                            },
-                            icon: Icons.delete,
-                            backgroundColor: Colors.purple,
-                            borderRadius: const BorderRadius.only(
-                                bottomRight: Radius.circular(10),
-                                topRight: Radius.circular(10)),
-                          )
-                        ],
-                      ),
-                      startActionPane: ActionPane(
-                        motion: const StretchMotion(),
-                        children: [
-                          SlidableAction(
-                            onPressed: (context) {
-                              completeTask(todo[index].isComplete, index);
-                            },
-                            icon: Icons.task_alt,
-                            backgroundColor: Colors.purple,
-                            borderRadius: const BorderRadius.only(
-                                bottomRight: Radius.circular(10),
-                                topRight: Radius.circular(10)),
-                          )
-                        ],
-                      ),
-                      child: ListTile(
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(10),
-                                topLeft: Radius.circular(10))),
-                        tileColor: const Color.fromARGB(255, 172, 160, 207),
-                        title: Text(
-                          " ${todo[index].task}",
-                          style: TextStyle(
-                              fontSize: 20,
-                              decoration: todo[index].isComplete == false
-                                  ? TextDecoration.none
-                                  : TextDecoration.lineThrough),
-                        ),
-                        leading: CircleAvatar(
-                          radius: 15,
-                          child: Text("$newIndex"),
-                        ),
-                      ),
-                    ),
+            child: ValueListenableBuilder(
+              valueListenable: Hive.box<ToDo>(HiveBoxes.todo).listenable(),
+              builder: (context,Box<ToDo> box, _){
+                if(box.values.isEmpty){
+                  return const Center(
+                    child: Text("Todo is empty"),
                   );
-                })),
+                } return ListView.builder(
+                    itemCount: box.values.length,
+                    itemBuilder: ((context, index) {
+                      ToDo? res = box.getAt(index);
+                      int newIndex = index + 1;
+                      return Padding(
+                        padding:
+                        const EdgeInsets.only(left: 15.0, top: 8, right: 15),
+                        child: Slidable(
+                          closeOnScroll: false,
+                          endActionPane: ActionPane(
+                            motion: const StretchMotion(),
+                            children: [
+                              SlidableAction(
+                                onPressed: (context) {
+                                  delete(box,index);
+                                },
+                                icon: Icons.delete,
+                                backgroundColor: Colors.purple,
+                                borderRadius: const BorderRadius.only(
+                                    bottomRight: Radius.circular(10),
+                                    topRight: Radius.circular(10)),
+                              )
+                            ],
+                          ),
+                          startActionPane: ActionPane(
+                            motion: const StretchMotion(),
+                            children: [
+                              SlidableAction(
+                                onPressed: (context) {
+                                  completeTask(res,index);
+                                },
+                                icon: Icons.task_alt,
+                                backgroundColor: Colors.purple,
+                                borderRadius: const BorderRadius.only(
+                                    bottomRight: Radius.circular(10),
+                                    topRight: Radius.circular(10)),
+                              )
+                            ],
+                          ),
+                          child: ListTile(
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(10),
+                                    topLeft: Radius.circular(10))),
+                            tileColor: const Color.fromARGB(255, 172, 160, 207),
+                            title: Text(
+                              "${res?.task}",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  decoration: res?.isComplete == false
+                                      ? TextDecoration.none
+                                      : TextDecoration.lineThrough),
+                              // )
+                            ),
+                            leading: CircleAvatar(
+                              radius: 15,
+                              child: Text("$newIndex"),
+                            ),
+                          ),
+                        ),
+                      );
+                    }));
+              }
+            ),
           )
         ]),
       ),
     );
   }
 
-  void delete(int id) {
-    setState(() {
-      todo.removeWhere((item) => item.id == id);
-    });
-  }
-
-  _displayTask(BuildContext context) {
+  Future<void> _displayTask(BuildContext context) async {
     final globalFormKey = GlobalKey<FormState>();
     final taskController = TextEditingController();
     return showDialog(
@@ -136,6 +167,12 @@ class _PendingTasksState extends State<PendingTasks> {
                         controller: taskController,
                         decoration:
                             const InputDecoration(hintText: "Enter Your Task"),
+                        onChanged: (value){
+                          setState(() {
+                            tasks=value;
+
+                          });
+                        }
                       ),
                     ),
                     const SizedBox(
@@ -149,10 +186,11 @@ class _PendingTasksState extends State<PendingTasks> {
                             style: TextStyle(fontSize: 16),
                             'ADD',
                           ),
-                          onPressed: () {
+                          onPressed: () async {
+                            Random random = Random();
+                            int randomId = random.nextInt(1000);
                             if (globalFormKey.currentState!.validate()) {
-                              addTask(taskController.text);
-                              Navigator.of(context).pop();
+                              addTask(randomId);
                             }
                           },
                         ),
@@ -173,21 +211,29 @@ class _PendingTasksState extends State<PendingTasks> {
         });
   }
 
-  void addTask(String newTask) {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // prefs.setString("taskKey", task);
+  void delete(Box<ToDo> box, int index) {
     setState(() {
-      Random random = Random();
-      int randomNumber = random.nextInt(1000);
-      todo.add(ToDo(id: randomNumber, task: newTask));
+      box.deleteAt(index);
+      print("deleted");
     });
-  }
+    }
 
-  completeTask(bool isComplete, int index) {
+
+  completeTask(ToDo? res,int  index) async {
     setState(() {
-      if (todo[index].isComplete == false) {
-        todo[index].isComplete = true;
+      if (res?.isComplete == false) {
+        res?.isComplete = true;
       }
     });
-  }
+    }
+
+    void addTask(int randomId){
+    Box<ToDo> todoBox = Hive.box<ToDo>(HiveBoxes.todo);
+    setState(() {
+    todoBox.add(ToDo(id: randomId, task: tasks));
+    });
+    Navigator.of(context).pop();
+    print(todoBox);
+
+     }
 }
