@@ -14,6 +14,8 @@ class PendingTasks extends StatefulWidget {
 
 class _PendingTasksState extends State<PendingTasks> {
 
+  late String tasks;
+  Box<ToDo>? box2;
   @override
   void initState() {
     super.initState();
@@ -25,11 +27,11 @@ class _PendingTasksState extends State<PendingTasks> {
     super.dispose();
     Hive.close();
   }
-  late String tasks;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFF8963ff),
         elevation: 0,
         title: Text(
           "Your Tasks",
@@ -40,7 +42,7 @@ class _PendingTasksState extends State<PendingTasks> {
       ),
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF8963ff),
         clipBehavior: Clip.hardEdge,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -60,9 +62,14 @@ class _PendingTasksState extends State<PendingTasks> {
               valueListenable: Hive.box<ToDo>(HiveBoxes.todo).listenable(),
               builder: (context,Box<ToDo> box, _){
                 if(box.values.isEmpty){
-                  return const Center(
-                    child: Text("Todo is empty"),
-                  );
+                  return  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.coffee,size: 50,color: Colors.purple,),
+                        Text("No Task Available",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.purple),)
+                      ],
+                    ));
                 } return ListView.builder(
                     itemCount: box.values.length,
                     itemBuilder: ((context, index) {
@@ -70,7 +77,7 @@ class _PendingTasksState extends State<PendingTasks> {
                       int newIndex = index + 1;
                       return Padding(
                         padding:
-                        const EdgeInsets.only(left: 15.0, top: 8, right: 15),
+                        const EdgeInsets.only(left: 10.0, top: 8, right: 10),
                         child: Slidable(
                           closeOnScroll: false,
                           endActionPane: ActionPane(
@@ -214,7 +221,6 @@ class _PendingTasksState extends State<PendingTasks> {
   void delete(Box<ToDo> box, int index) {
     setState(() {
       box.deleteAt(index);
-      print("deleted");
     });
     }
 
@@ -233,7 +239,6 @@ class _PendingTasksState extends State<PendingTasks> {
     todoBox.add(ToDo(id: randomId, task: tasks));
     });
     Navigator.of(context).pop();
-    print(todoBox);
 
      }
 }
