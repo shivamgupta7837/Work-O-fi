@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:hive/hive.dart';
 part 'Todo.g.dart';
 
